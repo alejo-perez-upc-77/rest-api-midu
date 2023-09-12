@@ -5,7 +5,7 @@ GET http://localhost:1234/movies
 GET http://localhost:1234/movies/c8a7d63f-3b04-44d3-9d95-8782fd7dcfaf
 
 ### Recuperar todas las películas por un género
-GET http://localhost:1234/movies?genre=ACTION
+GET http://localhost:1234/movies?genre=DRAMA
 
 ### Crear una película con POST
 POST http://localhost:1234/movies
@@ -31,3 +31,7 @@ Content-Type: application/json
 {
   "year": 2022
 }
+
+### Borrar un película
+
+DELETE http://localhost:1234/movies/dcdd0fad-a94c-4810-8acc-5f108d3b18c3
