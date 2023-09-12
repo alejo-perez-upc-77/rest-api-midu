@@ -1,63 +1,17 @@
 import { Router } from 'express'
 
-import { validateMovie, validatePartialMovie } from './../schemas/movies.js'
-import { MovieModel } from '../models/movie.js'
+import { MovieController } from '../controllers/movies.js'
 
 export const routerMovies = Router()
    
-routerMovies.get('/', async (req,res) => {
-  const { genre } = req.query
-  const movies = await MovieModel.getAll({ genre })
-  res.json(movies)
-})
+routerMovies.get('/', MovieController.getAll)
 
-routerMovies.get('/:id', async (req,res) => {
-  const { id } = req.params
-  const movie = await MovieModel.getById({ id })
-  if (movie) return res.json(movie)  
-  res.status(404).json({ message: 'Movie not found' })
-})
+routerMovies.get('/:id', MovieController.getById)
 
-routerMovies.post('/', async (req,res) => {
-  const result = validateMovie(req.body)
+routerMovies.post('/', MovieController.create)
 
-  if (!result.success) {
-    // 422 Unprocessable Entity
-    return res.status(400).json({ error: JSON.parse(result.error.message) })
-  }
+routerMovies.delete('/:id', MovieController.delete)
 
-  const newMovie =  await MovieModel.create({ input: result.data })
-
-  res.status(201).json(newMovie)
-})
-
-routerMovies.delete('/:id', async (req,res) => {
-  const { id } = req.params
-  
-  const result = await MovieModel.delete({id})
-  
-  if (result === false){
-
-    return res.status(404).json({ message: 'Movie not found' })
-  }
-
-  return res.json({ message: 'Movie deleted' })
-  
-})
-
-routerMovies.patch('/:id', async (req,res) => {
-  const result = validatePartialMovie(req.body)
-
-  if (!result.success) {
-    return res.status(400).json({ error: JSON.parse(result.error.message) })
-  }
-
-  const { id } = req.params
-
-  const updatedMovie = await MovieModel.update ({ id, input: result.data })
-
-  return res.json(updatedMovie)
-  
-})
+routerMovies.patch('/:id', MovieController.patch)
 
 
